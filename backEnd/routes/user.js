@@ -5,6 +5,8 @@ const bcrypt = require('bcrypt');
 const dotenv = require('dotenv').config();
 const jwtPass = dotenv.parsed.JWT_USER_PASSWORD;
 const saltRound = Number(dotenv.parsed.BCRYPT_SALT_ROUNDS);
+const { mailValid } = require('../validators/mailValid');
+const { passwordValid } = require('../validators/passwordValid');
 const { userSchemaValid } = require('../validators/userSchemaValid');
 const { userModel } = require('../config/db');
 
@@ -43,4 +45,19 @@ userRouter.post('/signup',userSchemaValid, async (req, res) => {
     }
 });
 
+userRouter.post('/signin', (req, res) => {
+
+    const { email, password } = req.body;
+    res.json({
+        message: 'thing are  good'
+    })
+
+});
+
+userRouter.post('/changerPassword',(req, res) => {
+    const { oldPassword, newPassword } = req.body;
+    res.json({
+        message: 'thing are  good'
+    })
+})
 module.exports = userRouter;

@@ -1,11 +1,13 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv').config()
 const MONGO_URI = dotenv.parsed.MONGO_URI
 const userRouter = require('./routes/user');
 
 app.use(express.json())
+app.use(cors())
 app.use('/api/v1/user', userRouter)
 
 app.use((err, req, res, next) => {

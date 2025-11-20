@@ -32,8 +32,12 @@ userRouter.post('/signup',userSchemaValid, async (req, res) => {
             password: hashedPassword
         });
         user.save();
+        const token  = jwt.sign({
+            id : user._id
+        },jwtPass)
         res.status(200).json({
-            message:"User created successfully"
+            message:"User created successfully",
+            userId : token
         });
 
     } catch(error) {

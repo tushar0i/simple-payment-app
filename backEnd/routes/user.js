@@ -11,7 +11,7 @@ const { userSchemaValid } = require('../validators/userSchemaValid');
 const { userModel } = require('../config/db');
 
 
-userRouter.post('/signup',userSchemaValid, async (req, res) => {
+userRouter.post('/signup', userSchemaValid, async (req, res) => {
 
     const { email, password, lastName, firstName } = req.body;
     // checking if user already exist or not 
@@ -22,43 +22,65 @@ userRouter.post('/signup',userSchemaValid, async (req, res) => {
         });
     } else {
 
-    try{
+        try {
 
-        const hashedPassword = await bcrypt.hash(password,saltRound);
-        const user = new userModel({
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            password: hashedPassword
-        });
-        user.save();
-        const token  = jwt.sign({
-            id : user._id
-        },jwtPass)
-        res.status(200).json({
-            message:"User created successfully",
-            userId : token
-        });
+            const hashedPassword = await bcrypt.hash(password, saltRound);
+            const user = new userModel({
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                password: hashedPassword
+            });
+            user.save();
+            const token = jwt.sign({
+                id: user._id
+            }, jwtPass)
+            res.status(200).json({
+                message: "User created successfully",
+                userId: token
+            });
 
-    } catch(error) {
-        res.status(500).json({
-            message: "Error occured while hashing password"
-        });
-    }
-        
+        } catch (error) {
+            res.status(500).json({
+                message: "Error occured while hashing password"
+            });
+        }
+
     }
 });
 
-userRouter.post('/signin', (req, res) => {
+userRouter.post('/signin', mailValid, passwordValid, async (req, res) => {
 
     const { email, password } = req.body;
-    res.json({
-        message: 'thing are  good'
-    })
+    const userExist = await userModel.findOne({ email: email })
+    if (userExist) {
+        bcrypt.compare(password, userExist.password, function (err, result) {
+            if (result) {
+                const token = jwt.sign({
+                    id: userExist._id
+                }, jwtPass)
+                res.status(200).json({
+                    message: "Successfully Logged In ",
+                    userId: token
+                });
+            }
+            else {
+                res.json({
+                    message: "Incorrect password"
+                })
+            }
+        })
+    }
+    else {
+        res.json({
+            message: "User doesn't exist"
+        })
+    }
+
 
 });
 
-userRouter.post('/changerPassword',(req, res) => {
+userRouter.post('/changerPassword', (req, res) => {
     const { oldPassword, newPassword } = req.body;
     res.json({
         message: 'thing are  good'

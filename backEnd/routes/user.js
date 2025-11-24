@@ -9,6 +9,8 @@ const { mailValid } = require('../validators/mailValid');
 const { passwordValid } = require('../validators/passwordValid');
 const { userSchemaValid } = require('../validators/userSchemaValid');
 const { userModel } = require('../config/db');
+const { userChanges } = require('../validators/userChanges')
+const { authMiddleware } = require('../middlewares/authMiddleware')
 
 
 userRouter.post('/signup', userSchemaValid, async (req, res) => {
@@ -80,10 +82,29 @@ userRouter.post('/signin', mailValid, passwordValid, async (req, res) => {
 
 });
 
-userRouter.post('/changerPassword', (req, res) => {
-    const { oldPassword, newPassword } = req.body;
+userRouter.post('/changePassword', authMiddleware, userChanges, async (req, res) => {
+
+    const updateData = {}
+    if (req.body.firstName) updateData.firstName = req.body.firstName;
+    if (req.body.lastName) updateData.lastName = req.body.lastName;
+    if (req.body.password) {
+        try{
+            const hashedPassword = await bcrypt.hash(req.body.password, saltRound);
+            updateData.password = hashedPassword
+        }
+        catch(error){
+            res.status(500).json({
+                message: "Error occured while hashing password"
+            });
+        }
+    }
+    await userModel.findByIdAndUpdate(
+        req.userId,
+        { $set: updateData },
+        { new: true }
+    );
     res.json({
-        message: 'thing are  good'
+        message: 'Changes made successfully'
     })
 })
 module.exports = userRouter;

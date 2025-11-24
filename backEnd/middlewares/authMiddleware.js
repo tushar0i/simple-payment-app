@@ -9,7 +9,7 @@ const authMiddleware = (req, res, next) => {
             message: "unauthorized"
         });
     }
-    const token = authHeader.split(' ')[2];
+    const token = authHeader.split(' ')[1];
     try {
         const decode = jwt.verify(token, jwtPass);
         if (decode.id) {

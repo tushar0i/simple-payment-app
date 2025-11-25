@@ -10,7 +10,8 @@ const { passwordValid } = require('../validators/passwordValid');
 const { userSchemaValid } = require('../validators/userSchemaValid');
 const { userModel } = require('../config/db');
 const { userChanges } = require('../validators/userChanges')
-const { authMiddleware } = require('../middlewares/authMiddleware')
+const { authMiddleware } = require('../middlewares/authMiddleware');
+
 
 
 userRouter.post('/signup', userSchemaValid, async (req, res) => {
@@ -88,11 +89,11 @@ userRouter.put('/changePassword', authMiddleware, userChanges, async (req, res) 
     if (req.body.firstName) updateData.firstName = req.body.firstName;
     if (req.body.lastName) updateData.lastName = req.body.lastName;
     if (req.body.password) {
-        try{
+        try {
             const hashedPassword = await bcrypt.hash(req.body.password, saltRound);
             updateData.password = hashedPassword
         }
-        catch(error){
+        catch (error) {
             res.status(500).json({
                 message: "Error occured while hashing password"
             });
@@ -107,4 +108,37 @@ userRouter.put('/changePassword', authMiddleware, userChanges, async (req, res) 
         message: 'Changes made successfully'
     })
 })
+
+userRouter.get('/bulk', async (req, res) => {
+    const search = req.query.filter || "".trim();
+    if (!search) {
+        res.json({
+            message: "query parameter filter is required"
+        })
+    }
+
+    const users = await userModel.find(
+        {
+            $or: [{
+                firstName: {
+                    $regex: search, $options: "i"
+                }
+            }, {
+                lastName: {
+                    $regex: search, $options: "i"
+                }
+            }]
+        }
+    )
+    res.json({
+        user: users.map(user => ({
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            _id: user._id
+        }))
+    })
+
+})
+
 module.exports = userRouter;

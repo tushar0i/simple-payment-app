@@ -82,7 +82,7 @@ userRouter.post('/signin', mailValid, passwordValid, async (req, res) => {
 
 });
 
-userRouter.post('/changePassword', authMiddleware, userChanges, async (req, res) => {
+userRouter.put('/changePassword', authMiddleware, userChanges, async (req, res) => {
 
     const updateData = {}
     if (req.body.firstName) updateData.firstName = req.body.firstName;

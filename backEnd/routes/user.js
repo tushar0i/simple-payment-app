@@ -9,6 +9,7 @@ const { mailValid } = require('../validators/mailValid');
 const { passwordValid } = require('../validators/passwordValid');
 const { userSchemaValid } = require('../validators/userSchemaValid');
 const { User } = require('../config/db');
+const { Account } = require('../config/db')
 const { userChanges } = require('../validators/userChanges')
 const { authMiddleware } = require('../middlewares/authMiddleware');
 
@@ -27,13 +28,20 @@ userRouter.post('/signup', userSchemaValid, async (req, res) => {
         try {
 
             const hashedPassword = await bcrypt.hash(password, saltRound);
-            const user = new User({
+            const user = await User.create({
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
                 password: hashedPassword
             });
-            user.save();
+
+            const userId = user._id;
+            
+            await Account.create({
+                userId:userId,
+                balance: 1000 + Math.floor(Math.random()*20000)
+            })
+
             const token = jwt.sign({
                 id: user._id
             }, jwtPass)

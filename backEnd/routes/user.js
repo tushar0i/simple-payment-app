@@ -8,17 +8,16 @@ const saltRound = Number(dotenv.parsed.BCRYPT_SALT_ROUNDS);
 const { mailValid } = require('../validators/mailValid');
 const { passwordValid } = require('../validators/passwordValid');
 const { userSchemaValid } = require('../validators/userSchemaValid');
-const { userModel } = require('../config/db');
+const { User } = require('../config/db');
 const { userChanges } = require('../validators/userChanges')
 const { authMiddleware } = require('../middlewares/authMiddleware');
-
 
 
 userRouter.post('/signup', userSchemaValid, async (req, res) => {
 
     const { email, password, lastName, firstName } = req.body;
     // checking if user already exist or not 
-    const userExist = await userModel.findOne({ email: email });
+    const userExist = await User.findOne({ email: email });
     if (userExist) {
         res.status(409).json({//while searching for the correct status code to return I found 418 I am a teapot
             message: "User already exist's try to sign in"
@@ -28,7 +27,7 @@ userRouter.post('/signup', userSchemaValid, async (req, res) => {
         try {
 
             const hashedPassword = await bcrypt.hash(password, saltRound);
-            const user = new userModel({
+            const user = new User({
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
@@ -55,7 +54,7 @@ userRouter.post('/signup', userSchemaValid, async (req, res) => {
 userRouter.post('/signin', mailValid, passwordValid, async (req, res) => {
 
     const { email, password } = req.body;
-    const userExist = await userModel.findOne({ email: email })
+    const userExist = await User.findOne({ email: email })
     if (userExist) {
         bcrypt.compare(password, userExist.password, function (err, result) {
             if (result) {
@@ -99,7 +98,7 @@ userRouter.put('/changePassword', authMiddleware, userChanges, async (req, res) 
             });
         }
     }
-    await userModel.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
         req.userId,
         { $set: updateData },
         { new: true }
@@ -111,13 +110,13 @@ userRouter.put('/changePassword', authMiddleware, userChanges, async (req, res) 
 
 userRouter.get('/bulk', async (req, res) => {
     const search = req.query.filter || "".trim();
-    if (!search) {
-        res.json({
-            message: "query parameter filter is required"
-        })
-    }
+    // if (!search) {
+    //     res.json({
+    //         message: "query parameter filter is required"
+    //     })
+    // }
 
-    const users = await userModel.find(
+    const users = await User.find(
         {
             $or: [{
                 firstName: {

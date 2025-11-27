@@ -10,7 +10,7 @@ const accountRouter = require('./routes/account')
 app.use(express.json())
 app.use(cors())
 app.use('/api/v1/user', userRouter)
-app.use('api/v1/account',accountRouter)
+app.use('/api/v1/account',accountRouter)
 
 app.use((err, req, res, next) => {
     console.error(err)

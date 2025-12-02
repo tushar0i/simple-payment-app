@@ -21,7 +21,7 @@ const authMiddleware = (req, res, next) => {
             })
         }
     } catch (err) {
-        console.error(err)
+        // console.error(err)
         return res.json({
             message: "wrong token/key"
         })

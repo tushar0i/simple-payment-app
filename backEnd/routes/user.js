@@ -8,8 +8,7 @@ const saltRound = Number(dotenv.parsed.BCRYPT_SALT_ROUNDS);
 const { mailValid } = require('../validators/mailValid');
 const { passwordValid } = require('../validators/passwordValid');
 const { userSchemaValid } = require('../validators/userSchemaValid');
-const { User } = require('../config/db');
-const { Account } = require('../config/db')
+const { User, Account } = require('../config/db');
 const { userChanges } = require('../validators/userChanges')
 const { authMiddleware } = require('../middlewares/authMiddleware');
 
@@ -47,7 +46,7 @@ userRouter.post('/signup', userSchemaValid, async (req, res) => {
             }, jwtPass)
             res.status(200).json({
                 message: "User created successfully",
-                userId: token
+                token: token
             });
 
         } catch (error) {
@@ -71,18 +70,18 @@ userRouter.post('/signin', mailValid, passwordValid, async (req, res) => {
                 }, jwtPass)
                 res.status(200).json({
                     message: "Successfully Logged In ",
-                    userId: token
+                    token: token
                 });
             }
             else {
-                res.json({
+                res.status(409).json({
                     message: "Incorrect password"
                 })
             }
         })
     }
     else {
-        res.json({
+        res.status(409).json({
             message: "User doesn't exist"
         })
     }

@@ -28,13 +28,14 @@ export function Signup(){
         <InputBox className="" place={"Nothing@123"} label={"Password"} type={"password"} onChange={(e)=>{
             setPassword(e.target.value);
         }}></InputBox>
-        <Button label={"Sign Up"} onClick={()=>{
-            axios.post("http://localhost:3000/api/v1/user/signup",{
+        <Button label={"Sign Up"} onClick={ async ()=>{
+            const response = await axios.post("http://localhost:3000/api/v1/user/signup",{
                 email:email,
                 password:password,
                 firstName:firstName,
                 lastName:lastName
-            })
+            });
+            localStorage.setItem("token",response.data.token)
         }}></Button>
         <BottomText text={"Already have an account? "} link={"/signin"} page={"Signin"}></BottomText>
         </div>

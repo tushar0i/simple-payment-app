@@ -13,7 +13,7 @@ export function Signup(){
     const[password , setPassword] = useState("");
     return(<>
     <div className="flex justify-center items-center h-screen">
-        <div className="w-sm  bg-gray-100 rounded-2xl border-3 shadow-sm flex flex-col items-center gap-4">
+        <div className="w-sm  bg-black rounded-2xl shadow-sm flex flex-col items-center gap-4">
         <Heading  className="" content={"Sigh Up"}></Heading>
         <SubHeading content={"Enter your details to create an account"}></SubHeading>
         <InputBox className="" place={"Some"} label={"First Name"} type={"text"} onChange={(e)=>{

@@ -5,8 +5,10 @@ import { Button } from "../components/Button";
 import { BottomText } from "../components/BottomText";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function Signin(){
+    const navigate = useNavigate();
     const [email,setEmail] = useState("")
     const [password,setPassword] = useState("")
 
@@ -27,6 +29,7 @@ export function Signin(){
                     password
                 });
                 localStorage.setItem("token",response.data.token)
+                navigate("/dashboard");
             }}></Button>
             <BottomText text={"Don't have an account yet? "} link={"/signup"} page={"Signup"}></BottomText>
             </div>

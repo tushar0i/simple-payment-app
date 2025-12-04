@@ -5,8 +5,10 @@ import { SubHeading } from "../components/SubHeading";
 import { BottomText } from "../components/BottomText";
 import { useState } from "react";
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 export function Signup(){
+    const navigate = useNavigate()
     const[firstName , setFirstName] = useState("");
     const[lastName , setLastName] = useState("");
     const[email , setEmail] = useState("");
@@ -36,6 +38,7 @@ export function Signup(){
                 lastName:lastName
             });
             localStorage.setItem("token",response.data.token)
+            navigate("/dashboard");
         }}></Button>
         <BottomText text={"Already have an account? "} link={"/signin"} page={"Signin"}></BottomText>
         </div>

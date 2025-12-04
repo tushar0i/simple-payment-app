@@ -42,7 +42,8 @@ userRouter.post('/signup', userSchemaValid, async (req, res) => {
             })
 
             const token = jwt.sign({
-                id: user._id
+                id: user._id,
+                email: user.email
             }, jwtPass)
             res.status(200).json({
                 message: "User created successfully",
@@ -115,8 +116,10 @@ userRouter.put('/changePassword', authMiddleware, userChanges, async (req, res) 
     })
 })
 
-userRouter.get('/bulk', async (req, res) => {
+userRouter.get('/bulk', authMiddleware , async (req, res) => {
     const search = req.query.filter || "".trim();
+    const currentUserId = req.userId || req.userId;
+
     // if (!search) {
     //     res.json({
     //         message: "query parameter filter is required"
@@ -125,6 +128,7 @@ userRouter.get('/bulk', async (req, res) => {
 
     const users = await User.find(
         {
+            _id: { $ne: currentUserId },
             $or: [{
                 firstName: {
                     $regex: search, $options: "i"

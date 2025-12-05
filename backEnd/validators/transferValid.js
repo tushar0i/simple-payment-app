@@ -8,9 +8,8 @@ const schema = z.object({
 
 export function transferValid(req,res,next){
     const response = schema.safeParse(req.body);
-    console.log(response)
     if(!response.success){
-        res.json({
+        res.status(400).json({
             message: 'Invalid input'
         })
     }else{

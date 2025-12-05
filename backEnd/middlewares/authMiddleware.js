@@ -5,7 +5,7 @@ const jwtPass = env.parsed.JWT_USER_PASSWORD;
 const authMiddleware = (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.json({
+        return res.status(401).json({
             message: "unauthorized"
         });
     }
@@ -16,13 +16,13 @@ const authMiddleware = (req, res, next) => {
             req.userId = decode.id;
             next();
         } else {
-            return res.json({
+            return res.status(404).json({
                 message: "user not found"
             })
         }
     } catch (err) {
         // console.error(err)
-        return res.json({
+        return res.status(401).json({
             message: "wrong token/key"
         })
     }

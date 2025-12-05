@@ -11,6 +11,7 @@ const { userSchemaValid } = require('../validators/userSchemaValid');
 const { User, Account } = require('../config/db');
 const { userChanges } = require('../validators/userChanges')
 const { authMiddleware } = require('../middlewares/authMiddleware');
+const { email } = require('zod');
 
 
 userRouter.post('/signup', userSchemaValid, async (req, res) => {
@@ -115,6 +116,23 @@ userRouter.put('/changePassword', authMiddleware, userChanges, async (req, res) 
         message: 'Changes made successfully'
     })
 })
+userRouter.get("/me", authMiddleware , async (req,res)=>{
+    const response = await User.findById(req.userId).select("-password")
+    if(response){
+        res.status(200).json({
+            me : {
+                email : response.email,
+                firstName : response.firstName,
+                lastName : response.lastName
+            }
+        })
+    }
+    else {
+        res.status(404).json({
+            message : "notMe"
+        })
+    }
+});
 
 userRouter.get('/bulk', authMiddleware , async (req, res) => {
     const search = req.query.filter || "".trim();

@@ -8,10 +8,28 @@ import axios from "axios"
 import { GihubRepo } from "../components/GithubRepo"
 
 export function Dashboard() {
+
     const [filter, setFilter] = useState([])
     const [users, setUser] = useState([])
     const [balance, setBalance] = useState("")
+    const [firstName ,setFirstName] = useState("")
+    const navigate = useNavigate()
     const token = localStorage.getItem("token");
+
+    useEffect(()=>{
+        axios.get("http://localhost:3000/api/v1/user/me",{
+            headers : {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        .then(response=>{
+            setFirstName(response.data.me.firstName[0].toUpperCase())
+        })
+        .catch(()=>{
+            navigate("/signin")
+        })
+    },[navigate,token])
+
     useEffect(() => {
         axios.get("http://localhost:3000/api/v1/user/bulk?filter=" + filter, {
             headers: {
@@ -33,9 +51,12 @@ export function Dashboard() {
                 setBalance(response.data.balance)
             })
     }, [])
-    const navigate = useNavigate()
+
+    
+
     return (<>
-        <TopBar firstName={"Someone"} onClick={() => {
+       
+        <TopBar firstName={firstName}  onClick={() => {
             localStorage.removeItem("token")
             navigate("/signin")
         }}></TopBar>

@@ -6,6 +6,7 @@ import { BottomText } from "../components/BottomText";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { GihubRepo } from "../components/GithubRepo";
 
 export function Signin(){
     const navigate = useNavigate();
@@ -34,5 +35,6 @@ export function Signin(){
             <BottomText text={"Don't have an account yet? "} link={"/signup"} page={"Signup"}></BottomText>
             </div>
         </div>
+        <GihubRepo></GihubRepo>
     </>)
 }

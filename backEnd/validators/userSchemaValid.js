@@ -19,7 +19,7 @@ export  function userSchemaValid(req,res,next){
 
     if(!(response.success)){
         res.status(411).json({
-            msg: "invalid email or password",
+            message: "invalid email or password",
         })
     } else {
         next()

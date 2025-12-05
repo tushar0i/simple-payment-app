@@ -52,7 +52,6 @@ export function Dashboard() {
             })
     }, [])
 
-    
 
     return (<>
        
@@ -60,15 +59,21 @@ export function Dashboard() {
             localStorage.removeItem("token")
             navigate("/signin")
         }}></TopBar>
+
         <div className="flex gap-4 mt-20 ">
+
             <ShowBalance balance={balance} ></ShowBalance>
+
             <SearchBar type={"text"} place={"Search User here ...."} onChange={(e) => {
                 setFilter(e.target.value)
             }} ></SearchBar>
+
         </div>
+
         <div className="m-4">
             {users.map(user => <UsersList user={user} ></UsersList>)}
         </div>
+        
         <GihubRepo></GihubRepo>
     </>)
 }

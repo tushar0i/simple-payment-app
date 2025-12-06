@@ -18,9 +18,7 @@ Uploading Soon....
 
 **Screenshot**
 
-<img height="200px"  alt="Sign Up page" src="./frontEnd/src/assets/SignUp.png ">
-<img height="200px"  alt="Sign In page" src="./frontEnd/src/assets/SIgnIn.png ">
-<img height="200px"  alt="Send Money page" src="./frontEnd/src/assets/SendMoney.png ">
+<img height="200px"  alt="Sign Up page" src="./frontEnd/src/assets/SignUp.png "><img height="200px"  alt="Sign In page" src="./frontEnd/src/assets/SignIn.png "><img height="200px"  alt="Send Money page" src="./frontEnd/src/assets/SendMoney.png ">
 
 <img height="200px"  alt="Dashboard page" src="./frontEnd/src/assets/Dashboard.png ">
 

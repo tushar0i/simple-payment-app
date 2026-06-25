@@ -1,4 +1,4 @@
-import { z } from 'zod';
+const { z } = require('zod');
 
 const schema = z.object({
     firstName: z.string().optional(),
@@ -13,7 +13,7 @@ const schema = z.object({
         .optional()
 })
 
-export function userChanges(req,res,next){
+function userChanges(req,res,next){
     const response = schema.safeParse(req.body);
     if(!response.success){
         res.json({
@@ -23,3 +23,4 @@ export function userChanges(req,res,next){
         next();
     }
 }
+module.exports = { userChanges };

@@ -1,10 +1,10 @@
-import { z } from 'zod';
+const { z } = require('zod');
 
 const schema = z.object({
     email : z.email()
 })
 
-export function mailValid(req,res,next){
+function mailValid(req,res,next){
     const response = schema.safeParse(req.body)
 
     if(!response.success){
@@ -16,3 +16,4 @@ export function mailValid(req,res,next){
         next()
     }
 }
+module.exports = { mailValid };

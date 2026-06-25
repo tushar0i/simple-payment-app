@@ -1,4 +1,4 @@
-import { z } from 'zod';
+const { z } = require('zod');
 
 const schema = z.object({
     password : z.string()
@@ -10,7 +10,7 @@ const schema = z.object({
     .regex(/[^a-zA-Z0-9]/,{message:'Password must contain at least one special character'})
 })
 
-export function passwordValid(req,res,next){
+function passwordValid(req,res,next){
     const response = schema.safeParse(req.body)
 
     if(!response.success){
@@ -22,3 +22,5 @@ export function passwordValid(req,res,next){
         next()
     }
 }
+
+module.exports = { passwordValid };

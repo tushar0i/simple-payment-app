@@ -1,4 +1,4 @@
-import { z } from 'zod';
+const { z } = require('zod');
 
 const schema = z.object({
     to: z.string()
@@ -6,7 +6,7 @@ const schema = z.object({
     amount: z.number()
 });
 
-export function transferValid(req,res,next){
+function transferValid(req,res,next){
     const response = schema.safeParse(req.body);
     if(!response.success){
         res.status(400).json({
@@ -16,3 +16,5 @@ export function transferValid(req,res,next){
         next();
     }
 }
+
+module.exports = { transferValid };

@@ -2,8 +2,9 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv').config()
-const MONGO_URI = dotenv.parsed.MONGO_URI
+// const dotenv = require('dotenv').config()
+const MONGO_URI = process.env.MONGO_URI
+const PORT = Number(process.env.PORT)
 const userRouter = require('./routes/user');
 const accountRouter = require('./routes/account')
 
@@ -18,8 +19,6 @@ app.use((err, req, res, next) => {
         message : 'something is up with the server please try again later'
     })
 });
-
-PORT = 3000
 
 async function main() {
     await mongoose.connect(MONGO_URI)

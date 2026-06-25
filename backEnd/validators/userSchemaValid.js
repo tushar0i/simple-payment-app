@@ -1,4 +1,4 @@
-import {z} from 'zod';
+const { z } = require('zod');
 
 const schema = z.object({
     email: z.email(),
@@ -14,7 +14,7 @@ const schema = z.object({
     lastName: z.string()
 })
 
-export  function userSchemaValid(req,res,next){
+function userSchemaValid(req,res,next){
     const response = schema.safeParse(req.body)
 
     if(!(response.success)){
@@ -25,3 +25,5 @@ export  function userSchemaValid(req,res,next){
         next()
     }
 }
+
+module.exports = { userSchemaValid };

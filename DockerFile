@@ -1,0 +1,36 @@
+# Stage 1: Build the React Frontend
+FROM node:25-alpine AS frontend-builder
+
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm install
+
+# Copy the rest of the frontend code and build it (using Vite)
+COPY frontend/ ./
+RUN npm run build
+
+
+# Stage 2: Setup the Express Backend
+FROM node:25-alpine
+
+WORKDIR /app
+
+# Copy backend package files and install production dependencies
+COPY backend/package*.json ./backend/
+RUN npm install --prefix backend --production
+
+# Copy the rest of the backend code
+COPY backend/ ./backend/
+
+# Copy the compiled React build from Stage 1 into the correct path
+# (Express expects it at '../frontend/dist' based on our previous setup)
+COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
+
+# Expose the port your Express server runs on
+EXPOSE 3000
+
+# Set environment to production
+ENV NODE_ENV=production
+
+# Start the server
+CMD ["node", "backend/server.js"]

@@ -7,11 +7,13 @@ const MONGO_URI = process.env.MONGO_URI
 const PORT = Number(process.env.PORT)
 const userRouter = require('./routes/user');
 const accountRouter = require('./routes/account')
+const testRouter = require('./routes/test')
 
 app.use(express.json())
 app.use(cors())
 app.use('/api/v1/user', userRouter)
 app.use('/api/v1/account',accountRouter)
+app.use('api/v1/test',testRouter)
 
 app.use((err, req, res, next) => {
     console.error(err)
@@ -20,6 +22,7 @@ app.use((err, req, res, next) => {
     })
 });
 
+
 async function main() {
     await mongoose.connect(MONGO_URI)
     app.listen(PORT ,() => {
@@ -27,3 +30,4 @@ async function main() {
     })
 }
 main()
+

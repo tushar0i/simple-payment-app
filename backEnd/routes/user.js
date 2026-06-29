@@ -11,6 +11,7 @@ const { User, Account } = require('../config/db');
 const { userChanges } = require('../validators/userChanges')
 const { authMiddleware } = require('../middlewares/authMiddleware');
 const { email } = require('zod');
+const limiter = require('../middlewares/rateLimit');
 
 
 userRouter.post('/signup', userSchemaValid, async (req, res) => {
@@ -115,7 +116,9 @@ userRouter.put('/changePassword', authMiddleware, userChanges, async (req, res) 
         message: 'Changes made successfully'
     })
 })
-userRouter.get("/me", authMiddleware , async (req,res)=>{
+
+
+userRouter.get("/me",limiter(2,5), authMiddleware , async (req,res)=>{
     const response = await User.findById(req.userId).select("-password")
     if(response){
         res.status(200).json({
@@ -169,3 +172,4 @@ userRouter.get('/bulk', authMiddleware , async (req, res) => {
 })
 
 module.exports = userRouter;
+

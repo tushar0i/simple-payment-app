@@ -11,9 +11,10 @@ const { User, Account } = require('../config/db');
 const { userChanges } = require('../validators/userChanges')
 const { authMiddleware } = require('../middlewares/authMiddleware');
 const { email } = require('zod');
+const limiter = require('../middlewares/rateLimit');
 
 
-userRouter.post('/signup', userSchemaValid, async (req, res) => {
+userRouter.post('/signup', limiter(1,5), userSchemaValid, async (req, res) => {
 
     const { email, password, lastName, firstName } = req.body;
     // checking if user already exist or not 
@@ -59,7 +60,7 @@ userRouter.post('/signup', userSchemaValid, async (req, res) => {
     }
 });
 
-userRouter.post('/signin', mailValid, passwordValid, async (req, res) => {
+userRouter.post('/signin',limiter(60,5), mailValid, passwordValid, async (req, res) => {
 
     const { email, password } = req.body;
     const userExist = await User.findOne({ email: email })
@@ -90,7 +91,7 @@ userRouter.post('/signin', mailValid, passwordValid, async (req, res) => {
 
 });
 
-userRouter.put('/changePassword', authMiddleware, userChanges, async (req, res) => {
+userRouter.put('/changePassword',limiter(60,5), authMiddleware, userChanges, async (req, res) => {
 
     const updateData = {}
     if (req.body.firstName) updateData.firstName = req.body.firstName;
@@ -115,7 +116,9 @@ userRouter.put('/changePassword', authMiddleware, userChanges, async (req, res) 
         message: 'Changes made successfully'
     })
 })
-userRouter.get("/me", authMiddleware , async (req,res)=>{
+
+
+userRouter.get("/me", limiter(1,5), authMiddleware , async (req,res)=>{
     const response = await User.findById(req.userId).select("-password")
     if(response){
         res.status(200).json({
@@ -133,7 +136,7 @@ userRouter.get("/me", authMiddleware , async (req,res)=>{
     }
 });
 
-userRouter.get('/bulk', authMiddleware , async (req, res) => {
+userRouter.get('/bulk',limiter(1,20), authMiddleware , async (req, res) => {
     const search = req.query.filter || "".trim();
     const currentUserId = req.userId || req.userId;
 
@@ -169,3 +172,4 @@ userRouter.get('/bulk', authMiddleware , async (req, res) => {
 })
 
 module.exports = userRouter;
+

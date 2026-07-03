@@ -4,15 +4,16 @@ const {authMiddleware} = require('../middlewares/authMiddleware')
 const { Account } = require('../config/db');
 const { default: mongoose } = require('mongoose');
 const { transferValid } = require('../validators/transferValid');
+const limiter = require('../middlewares/rateLimit')
 
-accountRouter.get('/balance', authMiddleware , async (req ,res) => {
+accountRouter.get('/balance',limiter(1,20), authMiddleware , async (req ,res) => {
     const account = await Account.findOne({userId:req.userId})
     res.json({
         balance : account.balance
     })
 });
 
-accountRouter.post('/transfer', authMiddleware, transferValid, async (req,res)=>{
+accountRouter.post('/transfer',limiter(1,10) , authMiddleware, transferValid, async (req,res)=>{
     // transaction are a crucial step ,if the data base goes down we should be able to revert the changes this is why we are using Transaction 
 
     const session = await mongoose.startSession();

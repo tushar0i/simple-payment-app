@@ -60,7 +60,7 @@ userRouter.post('/signup', limiter(1,5), userSchemaValid, async (req, res) => {
     }
 });
 
-userRouter.post('/signin',limiter(60,5), mailValid, passwordValid, async (req, res) => {
+userRouter.post('/signin',limiter(5,5), mailValid, passwordValid, async (req, res) => {
 
     const { email, password } = req.body;
     const userExist = await User.findOne({ email: email })
@@ -91,7 +91,7 @@ userRouter.post('/signin',limiter(60,5), mailValid, passwordValid, async (req, r
 
 });
 
-userRouter.put('/changePassword',limiter(60,5), authMiddleware, userChanges, async (req, res) => {
+userRouter.put('/changePassword',limiter(5,5), authMiddleware, userChanges, async (req, res) => {
 
     const updateData = {}
     if (req.body.firstName) updateData.firstName = req.body.firstName;

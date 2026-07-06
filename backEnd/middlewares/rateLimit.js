@@ -3,7 +3,7 @@ const rateLimit = require("express-rate-limit");
 function limiter(windowMin , max , message='Too many requests, please try again later.'){
     return rateLimit({
         windowMs:windowMin*60*1000, // Convert minutes to milliseconds
-        max: windowMin, // Limit each IP to maxRequests per windowMs
+        max: max, // Limit each IP to maxRequests per windowMs
         message: { 
             error: message
         },

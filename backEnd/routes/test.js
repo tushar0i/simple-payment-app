@@ -4,7 +4,7 @@ const limiter = require('../middlewares/rateLimit')
 
 testRouter.post('/', limiter(2,3), (req,res)=>{
     return res.json({
-        message : "testing route"
+        message : "everything is up and running well"
     })
 })
 

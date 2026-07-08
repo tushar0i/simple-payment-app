@@ -9,11 +9,19 @@ const userRouter = require('./routes/user');
 const accountRouter = require('./routes/account')
 const testRouter = require('./routes/test')
 
+app.set("trust proxy", 1);
 app.use(express.json())
 app.use(cors())
 app.use('/api/v1/user', userRouter)
 app.use('/api/v1/account',accountRouter)
 app.use('api/v1/test',testRouter)
+
+app.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        message: `Cannot ${req.method} ${req.originalUrl}`
+    });
+});
 
 app.use((err, req, res, next) => {
     console.error(err)
@@ -21,7 +29,6 @@ app.use((err, req, res, next) => {
         message : 'something is up with the server please try again later'
     })
 });
-
 
 async function main() {
     await mongoose.connect(MONGO_URI)

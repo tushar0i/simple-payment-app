@@ -1,6 +1,10 @@
+name: sta-backend
+
 services:
-  api:
-    build: .
+  api-services:
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       - MONGO_URI=${MONGO_URI}
       - JWT_SECRET=${JWT_SECRET}
@@ -9,7 +13,7 @@ services:
     expose:
       - "${PORT}"
     networks:
-      - app-network
+      - internal
 
   nginx:
     image: nginx:alpine
@@ -18,10 +22,10 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - api
+      - api-services
     networks:
-      - app-network
+      - internal
 
 networks:
-  app-network:
+  internal:
     driver: bridge

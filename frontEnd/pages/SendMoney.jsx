@@ -2,9 +2,9 @@ import { useSearchParams } from "react-router-dom";
 import { GihubRepo } from "../components/GithubRepo";
 import { useState } from "react";
 import axios from "axios"
+import api from "../src/api/axios";
 import { InputBox } from "../components/InputBox";
 import { useNavigate } from "react-router-dom";
-
 
 export function SendMoney() {
 
@@ -52,7 +52,7 @@ export function SendMoney() {
                 }}></InputBox>
 
                 <button type="button" className="text-white text-lg font-semibold rounded-lg text-center bg-green-500  w-80 shadow-lg  py-2 transition delay-50 duration-150 ease-in-out hover:scale-102  cursor-pointer m-3 " onClick={() => {
-                    axios.post("http://localhost:3000/api/v1/account/transfer", {
+                    api.post("/account/transfer", {
                         to: id,
                         amount: amount
 

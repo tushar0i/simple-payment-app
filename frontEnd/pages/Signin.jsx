@@ -5,6 +5,7 @@ import { Button } from "../components/Button";
 import { BottomText } from "../components/BottomText";
 import { useState } from "react";
 import axios from "axios";
+import api from "../src/api/axios";
 import { useNavigate } from "react-router-dom";
 import { GihubRepo } from "../components/GithubRepo";
 import { PasswordInputBox } from "../components/PasswordInputBox";
@@ -34,7 +35,7 @@ export function Signin() {
                 }}></PasswordInputBox>
 
                 <Button label={"Sign In"} onClick={() => {
-                    axios.post("http://localhost:3000/api/v1/user/signin", {
+                    api.post("/user/signin", {
                         email,
                         password
                     })

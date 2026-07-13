@@ -5,10 +5,10 @@ import { SubHeading } from "../components/SubHeading";
 import { BottomText } from "../components/BottomText";
 import { useState } from "react";
 import axios from 'axios';
+import api from "../src/api/axios";
 import { useNavigate } from "react-router-dom";
 import { GihubRepo } from "../components/GithubRepo";
 import { PasswordInputBox } from "../components/PasswordInputBox";
-
 
 export function Signup(){
 
@@ -45,7 +45,7 @@ export function Signup(){
         }}></PasswordInputBox>
 
         <Button label={"Sign Up"} onClick={ ()=>{
-            axios.post("http://localhost:3000/api/v1/user/signup",{
+            api.post("/user/signup",{
                 email:email,
                 password:password,
                 firstName:firstName,

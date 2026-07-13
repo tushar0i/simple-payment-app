@@ -5,6 +5,7 @@ import { TopBar } from "../components/TopBar"
 import { UsersList } from "../components/UsersList"
 import { useEffect, useState } from "react"
 import axios from "axios"
+import api from "../src/api/axios"
 import { GihubRepo } from "../components/GithubRepo"
 
 export function Dashboard() {
@@ -17,7 +18,7 @@ export function Dashboard() {
     const token = localStorage.getItem("token");
 
     useEffect(()=>{
-        axios.get("http://localhost:3000/api/v1/user/me",{
+        api.get('/user/me',{
             headers : {
                 Authorization: `Bearer ${token}`
             }
@@ -31,7 +32,7 @@ export function Dashboard() {
     },[navigate,token])
 
     useEffect(() => {
-        axios.get("http://localhost:3000/api/v1/user/bulk?filter=" + filter, {
+        api.get("/user/bulk?filter=" + filter, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -42,7 +43,7 @@ export function Dashboard() {
     }, [filter]);
 
     useEffect(() => {
-        axios.get("http://localhost:3000/api/v1/account/balance", {
+        api.get("/account/balance", {
             headers: {
                 Authorization: `Bearer ${token}`
             }

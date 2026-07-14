@@ -11,29 +11,32 @@ services:
     expose:
       - "${PORT}"
     networks:
-      - sta-internal
+      - projecta-internal
 
   nginx:
     image: nginx:alpine
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+    environment:
+      - PORT=${PORT}
+      - URL=api-services:${PORT}
+      - HOST=${HOST}
     depends_on:
       - api-services
     networks:
-      - sta-internal
+      - projecta-internal
       - traefik-public
-    restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik-public"
-      - "traefik.http.routes.sta.rule=Host(${HOST})"
-      - "traefik.http.routes.sta.entrypoint=websecure"
-      - "traefik.http.routes.sta.tls=true"
-      - "traefik.http.routes.sta.tls.certresolver=letsencrypt"
-      - "traefik.http.routes.sta.loadbalance.server.port=80"
+      - "traefik.http.routers.projecta.rule=Host(`${HOST}`)"
+      - "traefik.http.routers.projecta.entrypoints=websecure"
+      - "traefik.http.routers.projecta.tls=true"
+      - "traefik.http.routers.projecta.tls.certresolver=letsencrypt"
+      - "traefik.http.services.projecta.loadbalancer.server.port=80"
 
 networks:
-  sta-internal:
+  projecta-internal:
     driver: bridge
   traefik-public:
     external: true
